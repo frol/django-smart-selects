@@ -23,10 +23,24 @@ class ChainedRelatedMixin(RelatedField):
         super(ChainedRelatedMixin, self).__init__(to, **kwargs)
 
 
-class ChainedForeignKey(ForeignKey, ChainedRelatedMixin):
+class ChainedForeignKey(ForeignKey):
     """
     chains the choices of a previous combo box with this one
     """
+    def __init__(self, to, chained_field=None, chained_model_field=None,
+                 show_all=False, auto_choose=False, view_name=None, **kwargs):
+        if isinstance(to, basestring):
+            self.app_name, self.model_name = to.split('.')
+        else:
+            self.app_name = to._meta.app_label
+            self.model_name = to._meta.object_name
+        self.chain_field = chained_field
+        self.model_field = chained_model_field
+        self.show_all = show_all
+        self.auto_choose = auto_choose
+        self.view_name = view_name
+        ForeignKey.__init__(self, to, **kwargs)
+
     def formfield(self, **kwargs):
         defaults = {
             'form_class': form_fields.ChainedModelChoiceField,
