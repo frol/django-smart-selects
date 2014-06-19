@@ -2,8 +2,7 @@ from django import forms
 from django.db.models import get_model
 from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
 from django.forms import ChoiceField, MultipleChoiceField
-from smart_selects.widgets import ChainedSelect, ChainedSelectMultiple
-
+from smart_selects.widgets import ChainedSelect, ChainedSelectMultiple, ChainedCheckboxSelectMultiple
 
 class ChainedField(object):
     """
@@ -80,9 +79,10 @@ class ChainedModelMultipleChoiceField(ChainedField, ModelMultipleChoiceField):
         defaults = {
             'widget': ChainedSelectMultiple(app_name, model_name, chain_field,
                                     model_field, show_all, auto_choose,
-                                    manager, view_name, verbose_name=kwargs.get('label')),
+                                    manager, view_name),
         }
         defaults.update(kwargs)
+        import sys
         if not 'queryset' in kwargs:
             queryset = get_model(app_name, model_name).objects.all()
             super(ChainedModelMultipleChoiceField, self).__init__(queryset=queryset, initial=initial, **defaults)

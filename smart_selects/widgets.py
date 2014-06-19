@@ -7,7 +7,6 @@ from django.forms.widgets import Select, SelectMultiple
 from django.utils.safestring import mark_safe
 from smart_selects.utils import unicode_sorter
 
-
 if getattr(settings, 'USE_DJANGO_JQUERY', True):
     USE_DJANGO_JQUERY = True
 else:
@@ -34,8 +33,7 @@ class ChainedSelect(Select):
 
     class Media:
         if USE_DJANGO_JQUERY:
-            js = [static('admin/%s' % i) for i in
-                  ('js/jquery.min.js', 'js/jquery.init.js')]
+            js = []
         elif JQUERY_URL:
             js = [JQUERY_URL]
         else:
@@ -104,12 +102,24 @@ class ChainedSelect(Select):
 
 
 from django.contrib.admin.widgets import FilteredSelectMultiple
-class ChainedSelectMultiple(ChainedSelect, FilteredSelectMultiple):
+from django.forms import SelectMultiple
+class ChainedSelectMultiple(ChainedSelect, SelectMultiple):
     
     def __init__(self, *args, **kwargs):
         defaults = {
-            'is_stacked': False,
+            # 'is_stacked': False,
         }
         defaults.update(kwargs)
         super(ChainedSelectMultiple, self).__init__(*args, **defaults)
+        
+from django.forms.widgets import CheckboxSelectMultiple
+class ChainedCheckboxSelectMultiple(ChainedSelect, CheckboxSelectMultiple):
+    
+    def __init__(self, *args, **kwargs):
+        import sys
+        defaults = {
+            # 'is_stacked': False,
+        }
+        defaults.update(kwargs)
+        super(ChainedCheckboxSelectMultiple, self).__init__(*args, **defaults)
 
