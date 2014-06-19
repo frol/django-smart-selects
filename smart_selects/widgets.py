@@ -39,7 +39,7 @@ class ChainedSelect(Select):
             js = [JQUERY_URL]
         else:
             js = []
-        js.append(static('/js/smart_selects.js'))
+        js.append(static('js/smart_selects.js'))
 
     def get_queryset(self, value):
         return get_model(self.app_name, self.model_name).objects
