@@ -4,6 +4,7 @@ from django.contrib.admin.templatetags.admin_static import static
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.forms.widgets import Select, SelectMultiple
+from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from smart_selects.utils import unicode_sorter
 
@@ -38,7 +39,7 @@ class ChainedSelect(Select):
             js = [JQUERY_URL]
         else:
             js = []
-        js.append('/static/js/smart_selects.js')
+        js.append(static('/js/smart_selects.js'))
 
     def get_queryset(self, value):
         return get_model(self.app_name, self.model_name).objects

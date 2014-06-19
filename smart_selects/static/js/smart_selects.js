@@ -2,9 +2,9 @@
 /*global $: false, window, document, jQuery, django, navigator */
 
 // TODO: get rid of this hack when Django 1.6
-if ($.fn.jquery === '1.4.2') {
-    $.noConflict(true);
-}
+// if ($.fn.jquery === '1.4.2') {
+//     $.noConflict(true);
+// }
 
 /* Used in the ChainedSelect widget. Looks for all chained select inputs, uses their extra elements to build AJAX
    queries for those inputs, based on the given fields' values, and then deletes the data elements. */
@@ -19,6 +19,7 @@ if ($.fn.jquery === '1.4.2') {
                 $el = $(this),
                 $select_box = $el.siblings('select').eq(0),
             // handle the case where the field is from an inline template being added
+            // console.log($chained_field);
                 $chained_field = $('#id_' + chained_field.replace('__prefix__', $select_box.attr('id').split('-')[1])),
                 is_tabular = this.parentNode.tagName.toLowerCase() === 'td',
                 $field_set = $el.closest(is_tabular ? 'tr' : 'fieldset'),
@@ -28,7 +29,7 @@ if ($.fn.jquery === '1.4.2') {
             if (is_template) {
                 return;
             }
-            $el.remove();
+            // $el.remove();
             $chained_field.change(function () {
                 var init_values = $el.data('initValues'),
                     val = $(this).val(),
@@ -63,7 +64,8 @@ if ($.fn.jquery === '1.4.2') {
                         var i;
                         options = '<option value="">' + empty_label + '</option>';
                         for (i = 0; i < j.length; i += 1) {
-                            options += '<option value="' + j[i].value + '">' + j[i].display + '</option>';
+                            console.log(j[i].display);
+                            options += '<option selected value="' + j[i].value + '">' + j[i].display + '</option>';
                         }
                         $select_box.html(options);
                         if (init_values) {
