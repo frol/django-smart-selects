@@ -64,8 +64,7 @@
                         var i;
                         options = '<option value="">' + empty_label + '</option>';
                         for (i = 0; i < j.length; i += 1) {
-                            console.log(j[i].display);
-                            options += '<option selected value="' + j[i].value + '">' + j[i].display + '</option>';
+                            options += '<option value="' + j[i].value + '">' + j[i].display + '</option>';
                         }
                         $select_box.html(options);
                         if (init_values) {
