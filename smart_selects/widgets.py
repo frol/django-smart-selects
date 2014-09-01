@@ -71,7 +71,7 @@ class ChainedSelect(Select):
             # Hacky way to getting the correct empty_label from the field instead of a hardcoded '--------'
             empty_label = iter(self.choices).next()[1]
         if isinstance(value, (list, tuple, set)):
-            html_init_values = ','.join(str(value))
+            html_init_values = ','.join(str(v) for v in value)
         else:
             html_init_values = unicode(value)
         data_div = '<div class="field-smart-select-data" style="display: none" data-chained-field="%s" data-url="%s" ' \
