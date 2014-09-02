@@ -5,9 +5,7 @@ from django.forms import ChoiceField, MultipleChoiceField
 from smart_selects.widgets import ChainedSelect, ChainedSelectMultiple, ChainedCheckboxSelectMultiple
 
 class ChainedField(object):
-    """
-    Dummy field to distinguish smart select fields in form.
-    """
+
     def _get_queryset_choices(self, value):
         if self.widget.app_name is None:
             return
@@ -23,8 +21,10 @@ class ChainedField(object):
         queryset = self._get_queryset_choices(form_cleaned_data[self.widget.chain_field])
         if queryset is None:
             return
-        if not queryset.filter(id__in=form_cleaned_data.get('index_var_list', [])).exists():
-            raise forms.ValidationError("There is no such choice")
+        if self.required:
+            selected_items = form_cleaned_data.get(field_name, None)
+            if selected_items is None or not queryset.filter(id__in=selected_items).exists():
+                raise forms.ValidationError("There is no such choice")
 
 
 class ChainedChoiceField(ChainedField, ChoiceField):
@@ -82,7 +82,6 @@ class ChainedModelMultipleChoiceField(ChainedField, ModelMultipleChoiceField):
                                     manager, view_name),
         }
         defaults.update(kwargs)
-        import sys
         if not 'queryset' in kwargs:
             queryset = get_model(app_name, model_name).objects.all()
             super(ChainedModelMultipleChoiceField, self).__init__(queryset=queryset, initial=initial, **defaults)
