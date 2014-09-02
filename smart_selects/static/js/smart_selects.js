@@ -1,11 +1,6 @@
 /*jslint indent: 4, maxlen: 120 */
 /*global $: false, window, document, jQuery, django, navigator */
 
-// TODO: get rid of this hack when Django 1.6
-// if ($.fn.jquery === '1.4.2') {
-//     $.noConflict(true);
-// }
-
 /* Used in the ChainedSelect widget. Looks for all chained select inputs, uses their extra elements to build AJAX
    queries for those inputs, based on the given fields' values, and then deletes the data elements. */
 (function ($) {
@@ -22,6 +17,7 @@
             // console.log($chained_field);
                 $chained_field = $('#id_' + chained_field.replace('__prefix__', $select_box.attr('id').split('-')[1])),
                 is_tabular = this.parentNode.tagName.toLowerCase() === 'td',
+                is_multiple = $select_box.filter('[multiple]').length > 0,
                 $field_set = $el.closest(is_tabular ? 'tr' : 'fieldset'),
                 $object_block = is_tabular ? $field_set : $field_set.parent(),
                 is_template = !$object_block.is(':visible') && $object_block.hasClass('empty-form');
@@ -29,7 +25,6 @@
             if (is_template) {
                 return;
             }
-            // $el.remove();
             $chained_field.change(function () {
                 var init_values = $el.data('initValues'),
                     val = $(this).val(),
@@ -42,8 +37,8 @@
                     }
                 }
 
-                if (!val || val === '') {
-                    options = '<option value="">' + empty_label + '</option>';
+                if (!is_multiple && (!val || val === '')) {
+                    options = '<option>' + empty_label + '</option>';
                     $select_box.html(options);
                     $select_box.children('option:first').attr('selected', 'selected');
                     // Add default selected data if it is not already there
@@ -62,7 +57,11 @@
                     },
                     success: function (j) {
                         var i;
-                        options = '<option value="">' + empty_label + '</option>';
+                        if (is_multiple) {
+                            options = '';
+                        } else {
+                            options = '<option>' + empty_label + '</option>';
+                        }
                         for (i = 0; i < j.length; i += 1) {
                             options += '<option value="' + j[i].value + '">' + j[i].display + '</option>';
                         }
