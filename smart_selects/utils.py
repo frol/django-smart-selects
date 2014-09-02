@@ -34,6 +34,9 @@ def get_filterchain_queryset(app, model, manager=None):
     return model_class._default_manager
 
 def render_filterchain_choices(item_queryset):
-    item_list = list(item_queryset)
-    item_list.sort(cmp=strcoll, key=lambda x: unicode_sorter(unicode(x)))
+    if not item_queryset.ordered:
+        item_list = list(item_queryset)
+        item_list.sort(cmp=strcoll, key=lambda x: unicode_sorter(unicode(x)))
+    else:
+        item_list = item_queryset.iterator()
     return [{'value': item.pk, 'display': unicode(item)} for item in item_list]
