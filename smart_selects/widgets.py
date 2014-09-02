@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.admin.templatetags.admin_static import static
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
-from django.forms.widgets import Select, SelectMultiple
+from django.forms.widgets import Select, SelectMultiple, CheckboxSelectMultiple
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from smart_selects.utils import unicode_sorter
@@ -102,25 +102,9 @@ class ChainedSelect(Select):
         return mark_safe(output)
 
 
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.forms import SelectMultiple
 class ChainedSelectMultiple(ChainedSelect, SelectMultiple):
-    
-    def __init__(self, *args, **kwargs):
-        defaults = {
-            # 'is_stacked': False,
-        }
-        defaults.update(kwargs)
-        super(ChainedSelectMultiple, self).__init__(*args, **defaults)
-        
-from django.forms.widgets import CheckboxSelectMultiple
-class ChainedCheckboxSelectMultiple(ChainedSelect, CheckboxSelectMultiple):
-    
-    def __init__(self, *args, **kwargs):
-        import sys
-        defaults = {
-            # 'is_stacked': False,
-        }
-        defaults.update(kwargs)
-        super(ChainedCheckboxSelectMultiple, self).__init__(*args, **defaults)
+    pass
 
+
+class ChainedCheckboxSelectMultiple(ChainedSelect, CheckboxSelectMultiple):
+    pass
